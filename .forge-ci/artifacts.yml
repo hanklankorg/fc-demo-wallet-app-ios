@@ -28,7 +28,7 @@ artifacts:
       scheme: "Wallet Demo"
       workspace: "Wallet.xcworkspace"
       configuration: Release
-      enable-code-signing: true
+      enable-code-signing: false
       export-options-var: EXPORT_OPTIONS_BASE64
       use-xcodegen: true
       # The build number comes from the release workflow, which counts the
