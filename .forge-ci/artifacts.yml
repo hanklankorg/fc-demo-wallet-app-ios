@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2025 Digg - Agency for Digital Government
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# Artifacts Configuration for wallet-app-ios
+# iOS application - the signed IPA is attached to the GitHub Release and
+# uploaded to App Store Connect (TestFlight)
+
+# The release commit and the final tag are signed with the GPG key in
+# RELEASE_GPG_PRIVATE_KEY, as before. The release workflow turns the signing
+# of release files off (release.signartifacts: false), as before.
+sign:
+  method: gpg
+
+git-signing:
+  method: gpg
+
+artifacts:
+  - name: wallet-ios-demo
+    project-type: xcode-ios
+    working-directory: .
+    build-type: application
+    publish-to: []
+    config:
+      # Forge CI reads the Xcode version from this file, not from the
+      # XCODE_VERSION variable; keep it in step with the other workflows.
+      xcode-version: "26.4"
+      scheme: "Wallet Demo"
+      workspace: "Wallet.xcworkspace"
+      configuration: Release
+      enable-code-signing: true
+      export-options-var: EXPORT_OPTIONS_BASE64
+      use-xcodegen: true
+      # The build number comes from the release workflow, which counts the
+      # commits of main (xcode-build-number).

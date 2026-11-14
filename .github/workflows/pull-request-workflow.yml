@@ -16,23 +16,36 @@ concurrency:
 
 jobs:
   pr-checks:
-    uses: diggsweden/reusable-ci/.github/workflows/pullrequest-orchestrator.yml@1a76b0c1a69952742ea663c8cfe77d8fe1d168ad # v3.1.0
+    # Forge CI owns the lint and security gate: the checks of nanolinter.toml
+    # and the Swift linters, which fail the pull request on a finding. The
+    # Xcode tests run in the unit-tests job below.
+    uses: diggsweden/forge-ci/.github/workflows/pullrequest-orchestrator.yml@PIN_FORGE_CI_SHA # v0.90.0
     permissions:
-      contents: read
-      packages: read
-      security-events: write
+      actions: read # Download workflow result artifacts
+      contents: read # Clone repository and read source code
     secrets:
+      # Optional: uploads lint security findings (SARIF) to Code Scanning.
       CODE_SCANNING_TOKEN: ${{ secrets.CODE_SCANNING_TOKEN }}
     with:
-      reusable-ci-ref: 1a76b0c1a69952742ea663c8cfe77d8fe1d168ad
+      # The full commit the uses: ref above names; every job of the route runs
+      # the CLI built in this run from exactly this commit.
+      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      # Pinned by digest and admitted before any job runs; replace FIXME with
+      # the digests of the release you call (docs/runtime-images.md).
+      runtime-image: ghcr.io/diggsweden/forge-ci-runtime-base@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
+      canonical-builder-image: ghcr.io/diggsweden/forge-ci-runtime-go-1.27@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
       project-type: xcode-ios
-      linters.devbasecheck: true
-      linters.megalint: false
-      linters.commitlint: false
-      linters.licenselint: false
-      linters.dependencyreview: true
+      # The lint image, pinned by digest: the plan job refuses a tag.
+      nanolinter-image: ghcr.io/itiquette/nanolinter:swift@sha256:PIN_DIGEST
+      lint-engine: nanolinter
       linters.swiftformat: true
       linters.swiftlint: true
+      # The Swift linters run on the same macOS runner as the unit tests.
+      runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
+      # Lint findings fail the pull request, as the lint job did before.
+      # Dependency advisories are reported and do not fail it: the scan
+      # covers every dependency, not only the ones a pull request changes.
+      enforce-lint: true
 
   unit-tests:
     runs-on: ${{ vars.MACOS_VERSION || 'macos-26' }}

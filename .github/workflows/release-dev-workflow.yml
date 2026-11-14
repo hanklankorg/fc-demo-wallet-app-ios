@@ -37,19 +37,23 @@ jobs:
 
   build:
     needs: build-number
-    uses: diggsweden/reusable-ci/.github/workflows/build-xcode-ios.yml@1a76b0c1a69952742ea663c8cfe77d8fe1d168ad # v3.1.0
+    uses: diggsweden/forge-ci/.github/workflows/build-xcode-ios.yml@PIN_FORGE_CI_SHA # v0.90.0
     permissions:
       contents: read
     secrets:
-      CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
-      CERTIFICATE_PASSPHRASE: ${{ secrets.CERTIFICATE_PASSPHRASE }}
+      # Forge CI names the certificate secrets IOS_SIGNING_*; the repository
+      # secrets keep their names. The build mints its own keychain password.
+      IOS_SIGNING_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+      IOS_SIGNING_CERTIFICATE_PASSPHRASE: ${{ secrets.CERTIFICATE_PASSPHRASE }}
       PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
-      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       XCCONFIG_BASE64: ${{ secrets.XCCONFIG_BASE64 }}
     with:
-      reusable-ci-ref: 1a76b0c1a69952742ea663c8cfe77d8fe1d168ad
+      # The full commit the uses: ref above names; the macOS job builds the
+      # CLI from exactly this commit.
+      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
       xcode-version: ${{ vars.XCODE_VERSION }}
-      macos-version: ${{ vars.MACOS_VERSION }}
+      # MACOS_VERSION holds the runner label, as before.
+      runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
       scheme: "Wallet Demo"
       workspace: "Wallet.xcworkspace"
       configuration: Release
@@ -62,16 +66,17 @@ jobs:
 
   upload-testflight:
     needs: build
-    uses: diggsweden/reusable-ci/.github/workflows/publish-apple-appstore.yml@1a76b0c1a69952742ea663c8cfe77d8fe1d168ad # v3.1.0
-
+    uses: diggsweden/forge-ci/.github/workflows/publish-apple-appstore.yml@PIN_FORGE_CI_SHA # v0.90.0
     permissions:
+      actions: read # Download the IPA of the build job
       contents: read
     secrets:
       APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
       APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
     with:
-      reusable-ci-ref: 1a76b0c1a69952742ea663c8cfe77d8fe1d168ad
+      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      branch: ${{ github.ref }}
       ipa-artifact-name: wallet-ios-demo-dev
       submit-for-review: false
       skip-validation: false

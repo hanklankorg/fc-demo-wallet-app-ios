@@ -4,14 +4,14 @@
 
 name: Release Workflow
 
-# Triggers on release tags - creates GitHub Release with IPA and uploads to TestFlight
+# Runs when you push a signed release-request/vX.Y.Z tag; the release bumps
+# the version, writes the changelog and creates the final vX.Y.Z tag, never
+# you. It creates the GitHub Release with the signed IPA and uploads the IPA
+# to App Store Connect (TestFlight).
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+-alpha*"
-      - "v[0-9]+.[0-9]+.[0-9]+-beta*"
-      - "v[0-9]+.[0-9]+.[0-9]+-rc*"
+      - "release-request/v*"
 
 concurrency:
   group: release-${{ github.ref }}
@@ -26,55 +26,47 @@ jobs:
     permissions:
       contents: read
 
-  generate-artifacts-config:
-    needs: build-number
-    runs-on: ubuntu-latest
-    outputs:
-      config: ${{ steps.generate.outputs.config }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Generate artifacts config with build number
-        id: generate
-        env:
-          BUILD_NUMBER: ${{ needs.build-number.outputs.value }}
-          XCODE_VERSION: ${{ vars.XCODE_VERSION }}
-          MACOS_VERSION: ${{ vars.MACOS_VERSION }}
-        run: |
-          {
-            echo "config<<GITHUB_OUTPUT_EOF"
-            # shellcheck disable=SC2016 # envsubst needs the literal variable names
-            envsubst '${BUILD_NUMBER} ${XCODE_VERSION} ${MACOS_VERSION}' < .github/artifacts-config-template.yml
-            echo "GITHUB_OUTPUT_EOF"
-          } >> "$GITHUB_OUTPUT"
-
   release:
-    needs: generate-artifacts-config
-    uses: diggsweden/reusable-ci/.github/workflows/release-orchestrator.yml@1a76b0c1a69952742ea663c8cfe77d8fe1d168ad # v3.1.0
+    needs: build-number
+    uses: diggsweden/forge-ci/.github/workflows/release-orchestrator.yml@PIN_FORGE_CI_SHA # v0.90.0
     permissions:
-      contents: write
-      packages: write
-      id-token: write
-      attestations: write
-      security-events: write
-      actions: read
-      pull-requests: read
+      contents: write # Create GitHub releases and tags
+      packages: write # Required by the release route's publish stage
+      id-token: write # Keyless attestations of the release
+      actions: read # Read the run's artifacts
     secrets:
       RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      # GPG signs the release commit and tag.
       RELEASE_GPG_PRIVATE_KEY: ${{ secrets.RELEASE_GPG_PRIVATE_KEY }}
       RELEASE_GPG_PASSPHRASE: ${{ secrets.RELEASE_GPG_PASSPHRASE }}
       RELEASE_GPG_PUBLIC_KEY: ${{ secrets.RELEASE_GPG_PUBLIC_KEY }}
-      AUTHORIZED_RELEASE_DEVELOPERS: ${{ secrets.AUTHORIZED_RELEASE_DEVELOPERS }}
       CODE_SCANNING_TOKEN: ${{ secrets.CODE_SCANNING_TOKEN }}
-      CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
-      CERTIFICATE_PASSPHRASE: ${{ secrets.CERTIFICATE_PASSPHRASE }}
+      # Forge CI names the certificate secrets IOS_SIGNING_*; the repository
+      # secrets keep their names. The build mints its own keychain password.
+      IOS_SIGNING_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+      IOS_SIGNING_CERTIFICATE_PASSPHRASE: ${{ secrets.CERTIFICATE_PASSPHRASE }}
       PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
-      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       XCCONFIG_BASE64: ${{ secrets.XCCONFIG_BASE64 }}
+      # The upload of the signed IPA to App Store Connect.
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
     with:
-      reusable-ci-ref: 1a76b0c1a69952742ea663c8cfe77d8fe1d168ad
-      artifacts-config: ${{ needs.generate-artifacts-config.outputs.config }}
+      branch: main
+      # The full commit the workflow ref above names. Every plain-runner job
+      # runs the CLI built in this run from exactly this commit.
+      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      # Every runtime image is pinned by digest: the workflow that runs it
+      # refuses anything else before its job starts. Replace FIXME with
+      # the digests of the release you call; see
+      # https://github.com/diggsweden/forge-ci/blob/main/docs/runtime-images.md#advanced-pinning-recipe
+      runtime-image: ghcr.io/diggsweden/forge-ci-runtime-base@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
+      canonical-builder-image: ghcr.io/diggsweden/forge-ci-runtime-go-1.27@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
+      runtime-image-full: ghcr.io/diggsweden/forge-ci-runtime@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
+      # MACOS_VERSION holds the runner label, as before.
+      runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
+      # The build number counts the commits of main, as before.
+      xcode-build-number: ${{ needs.build-number.outputs.value }}
+      artifacts-config: .forge-ci/artifacts.yml
       release-publisher: github-cli
-      release.attachartifacts: |
-        build/export/*.ipa
       release.signartifacts: false
-
