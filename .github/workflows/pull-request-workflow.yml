@@ -41,21 +41,21 @@ jobs:
       linters.swiftformat: true
       linters.swiftlint: true
       # The Swift linters run on the same macOS runner as the unit tests.
-      runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
+      runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'xcode-27') }}
       # Lint findings fail the pull request, as the lint job did before.
       # Dependency advisories are reported and do not fail it: the scan
       # covers every dependency, not only the ones a pull request changes.
       enforce-lint: true
 
   unit-tests:
-    runs-on: ${{ vars.MACOS_VERSION || 'macos-26' }}
+    runs-on: ${{ vars.MACOS_VERSION || 'xcode-27' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup-env
         with:
-          xcode-version: ${{ vars.XCODE_VERSION || '26.4' }}
+          xcode-version: ${{ vars.XCODE_VERSION || '27.1' }}
 
       - name: Check PR branch is up to date
         shell: bash
