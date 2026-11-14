@@ -22,8 +22,8 @@ artifacts:
     build-type: application
     publish-to: []
     config:
-      # Forge CI reads the Xcode version from this file, not from the
-      # XCODE_VERSION variable; keep it in step with the other workflows.
+      # The version a release builds with when the XCODE_VERSION variable
+      # is not set; the release workflow passes the variable.
       xcode-version: "26.4"
       scheme: "Wallet Demo"
       workspace: "Wallet.xcworkspace"
