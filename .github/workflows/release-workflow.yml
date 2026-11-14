@@ -65,7 +65,7 @@ jobs:
       runtime-image-full: ghcr.io/diggsweden/forge-ci-runtime@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
       # XCODE_VERSION sets the Xcode version, as before; without it the
       # release uses xcode-version of .forge-ci/artifacts.yml.
-      xcode-version: ${{ vars.XCODE_VERSION }}
+      xcode-version: "26.6"
       # MACOS_VERSION holds the runner label, as before.
       runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
       # The build number counts the commits of main, as before.
