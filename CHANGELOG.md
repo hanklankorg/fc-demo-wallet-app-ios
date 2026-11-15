@@ -5,90 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.12] - 2025-12-12
-
-### Changed
-
-- Minor dev flow change
-- Minor flow renaming
-- Use reusable ci 2.4.3
-
-## [0.0.11] - 2025-12-12
-
-### Changed
-
-- Update justfile and reuseable-ci
-
-
-## [0.0.10] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci 2.3.8
-
-
-## [0.0.9] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci 2.3.7
-- Build with xcode 26.0.1 and gh runner 26
-
-
-## [0.0.8] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci 2.3.6
-
-
-## [0.0.7] - 2025-11-25
-
-### Changed
-
-- Allow enable ci plugins
-
-
-## [0.0.6] - 2025-11-25
-
-### Changed
-
-- Set swift tools to runner compatible verison
-
-
-## [0.0.5] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci v2.3.5
-
-
-## [0.0.4] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci 2.3.4
-
-
-## [0.0.3] - 2025-11-25
-
-### Changed
-
-- Use reuseable ci v2.3.3
-
-
-## [0.0.2] - 2025-11-25
-
-### Changed
-
-- Release on tag, not push
-- Use reuseable-ci v2.3.2
-
-
-## [0.0.1] - 2025-11-24
+## [0.0.21] - 2026-11-15
 
 ### Added
 
+- Add primary action bar (#220)
+- Add support for list of trusted entities (#219)
+- Add close button to settings sheet (#204)
+- Add settings entrypoint to onboarding intro screen (#195)
+- Add presentation response encryption support (#191)
+- Add script to download latest OpenAPI schema (#189)
+- Add no-op workflow for ignored screenshot paths (#173)
+- Support vct (#169)
+- Add screenshotbot workflow (#166)
+- Add screenshotbot support to snapshot tests (#165)
+- Add support for haip url schemes (#164)
+- Add support for DPoP authorization (#158)
+- Add remaining feature snapshot tests (#139)
+- Add conditional for cache restoration in xcode build action (#117)
+- Address failing swift-format and swiftlint issues in CI (#129)
+- Add onboarding snapshot tests (#122)
+- Add-platform-version-to-credential-interface-package (#118)
+- Add feature view snapshot tests (#115)
+- Add snapshot tests for reusable views (#112)
+- Add build and test workflow for convenience (#105)
+- Add new error view and remove old one (#103)
+- Add CODEOWNERS (#101)
+- Add xcode version for env setup (#99)
+- Add missing directory identifier in xcode refresh workflow (#98)
+- Add environment setup step step in workflow (#97)
+- Add pre commit hook and move swift lint check (#88)
+- Add scaffolding for swiftdata migration (#73)
+- Add first swiftdata database schema (#60)
+- Add renovate with xcodegen support (#53)
+- Add support for optional key attestations (#48)
+- Add and configure SwiftLint (#47)
+- Add support for selective disclosure (#44)
+- Add support for parsing SD-JWT (#40)
+- Add oidc login in onboarding (#24)
+- Add support for OpenID4VCI 1.0 (#23)
+- Add onboarding flow (#21)
 - Add theme with brand colors and custom font (#15)
 - Add support for Wallet Unit Attestations (#14)
 - Add enrollment on app start (#10)
@@ -110,6 +66,135 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Use the lab's Forge CI layer
+- Merge branch 'feat/migrate-to-forge-ci' of /home/jos/development/github.com/diggsweden/forge-ci-migrations/wallet-app-ios
+- Name the snapshot and release flows as the other projects do
+- Merge remote-tracking branch 'origin/feat/migrate-to-forge-ci'
+- Name the snapshot flow release-snapshot-workflow.yml
+- Name the secondary workflow files as the other projects do
+- Name the workflow files as the other projects do
+- Merge branch 'feat/migrate-to-forge-ci' of /home/jos/development/github.com/diggsweden/forge-ci-migrations/wallet-app-ios
+- Take the Xcode version of a release from XCODE_VERSION
+- Report SAST findings without failing the pull request
+- Migrate workflows to forge-ci
+- Consolidate reg. cert validation logic (#227)
+- Update dependencies to latest compatible releases (#226)
+- Assorted fixes from launchpad (#225)
+- Registration certificate (#224)
+- Update actions/upload-artifact action to v7.0.2 (#217)
+- Break out ui components to own module (#222)
+- Use primary action bar in issuance flow (#221)
+- Introduce soft edge scroll view (#218)
+- Bump reusable ci to v3.0.0 (#216)
+- Bump marketing version to 0.0.20 (was 0.0.2) (#214)
+- Bump marketing version to 0.0.2 (was 0.0.12) (#213)
+- Qr scanner package (#206)
+- Make passed strings localizable (#212)
+- Use macos image from github variables (#211)
+- Account reset support (#202)
+- Key attestation (#201)
+- Move eudi-lib-sdjwt-swift to SdJwt package (#194)
+- Route haip deeplinks to correct route (#192)
+- Update dependency apple/swift-openapi-generator to from: "1.13.1" (#177)
+- Update dependency apple/swift-openapi-runtime to from: "1.12.1" (#180)
+- Update dependency aqua:rvben/rumdl to v0.2.67 (#187)
+- Update dependency aqua:mvdan/sh to v3.14.1 (#190)
+- Render pid image (#188)
+- Make Issuance and Presentation packages testable (#186)
+- Modularize openid4 flows (#182)
+- Update dependency aqua:rvben/rumdl to v0.2.63 (#181)
+- Update dependency aqua:mvdan/sh to v3.14.0 (#174)
+- Settings rewrite (#175)
+- Skip screenshotbot check when no-op (#176)
+- Update dependency jose-swift to v6.0.5 (#171)
+- Update dependency aqua:rvben/rumdl to v0.2.62 (#172)
+- Update dependency aqua:rvben/rumdl to v0.2.61 (#168)
+- Run unit tests in parallel and cancel when needed (#167)
+- Update dependency eudi-lib-ios-openid4vci-swift to v0.53.1 (#159)
+- Update dependency aqua:realm/swiftlint to v0.65.1 (#163)
+- Update dependency aqua:rvben/rumdl to v0.2.60 (#156)
+- Feat/build variant (#160)
+- Update dependency aqua:rvben/rumdl to v0.2.52 (#155)
+- Update dependency aqua:rvben/rumdl to v0.2.50 (#154)
+- Update dependency eu-digital-identity-wallet/eudi-lib-ios-openid4vp-swift to v0.41.0 (#152)
+- Update dependency eudi-lib-sdjwt-swift to v0.14.6 (#84)
+- Update dependency aqua:casey/just to v1.58.0 (#150)
+- Update dependency aqua:rvben/rumdl to v0.2.49 (#148)
+- Update dependency swift-snapshot-testing to v1.19.4 (#134)
+- Update dependency eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift to v0.53.0 (#78)
+- Update dependency aqua:rvben/rumdl to v0.2.42 (#147)
+- Update onboarding copy (#146)
+- Update actions/upload-artifact action to v7 (#145)
+- Update actions/cache action to v6 (#143)
+- Update dependency apple/swift-openapi-runtime to from: "1.12.0" (#140)
+- Update dependency aqua:casey/just to v1.57.0 (#141)
+- Update actions/checkout action to v7 (#144)
+- Update dependency aqua:yonaskolb/xcodegen to v2.46.0 (#142)
+- Update actions/checkout action to v6.1.0 (#138)
+- Update dependency aqua:rvben/rumdl to v0.2.41 (#137)
+- Update dependency apple/swift-openapi-urlsession to from: "1.3.1" (#125)
+- Update dependency swiftlang/swift-syntax to v603.0.2 (#135)
+- Update diggsweden/reusable-ci action to v2.8.3 (#136)
+- Update dependency apple/swift-openapi-generator to from: "1.13.0" (#91)
+- Update dependency pointfreeco/swift-snapshot-testing to v1.19.3 (#126)
+- Update dependency aqua:rvben/rumdl to v0.2.40 (#128)
+- Pin commit hashes for actions and add .semgrepignore (#131)
+- Bump swiftlint version in mise config (#130)
+- Run wallet gateway package tests via dedicated scheme (#133)
+- Send device in backend requests (#127)
+- Update dependency aqua:zricethezav/gitleaks to v8.30.1 (#77)
+- Update dependency apple/swift-argument-parser to from: "1.8.2" (#75)
+- Update dependency aqua:rvben/rumdl to v0.2.37 (#74)
+- Clean stale device key in onboarding (#123)
+- Use real data in error report view (#121)
+- Propogate error responses from throws (#120)
+- Introduce error report view + clean up (#119)
+- Access mechanism (#116)
+- Setup snapshot testing (#110)
+- Optimize xcode cache workflow (#104)
+- Replace hardcoded strings with environment variables (#96)
+- Cache xcode derived data (#93)
+- Update actions/checkout action to v6 (#85)
+- Upload test coverage artefact (#89)
+- Bump reusable-ci to v2.8.2
+- Move WalletGateway OpenAPI client into a package (#79)
+- Move schema typealiases to single file and update scaffolding (#76)
+- Bump dependencies (#72)
+- Enable unit testing and code coverage in PR workflow (#57)
+- Bump dependencies (#64)
+- Bump reusable-ci to 2.8.0 (was 2.7.9) (#61)
+- Skip swiftlint for release builds (#52)
+- Update dashboard design (#51)
+- Use reusable ci 2.7.9 (#50)
+- Improve lint scripts and add to just (#49)
+- Replace SecKey with CryptoKit for signing (#46)
+- Update reusable-ci to v2.7.3 (#43)
+- Compute build number automatically (#38)
+- Migrate project to xcodegen (#39)
+- Try to fetch credential offer automatically (#37)
+- Redesign welcome screen (#33)
+- Dismiss keyboard on tap outside (#32)
+- Configure reuse and add license info (#31)
+- Use wallet unit attestations (#29)
+- Issuance in onboarding (#28)
+- Bump build number (#26)
+- Use reuseable ci 2.6.0
+- Change devbase-justkit name, improve dev doc
+- Minor dev flow change
+- Minor flow renaming
+- Use reusable ci 2.4.3
+- Update justfile and reuseable-ci
+- Use reuseable ci 2.3.8
+- Use reuseable ci 2.3.7
+- Build with xcode 26.0.1 and gh runner 26
+- Use reuseable ci 2.3.6
+- Allow enable ci plugins
+- Set swift tools to runner compatible verison
+- Use reuseable ci v2.3.5
+- Use reuseable ci 2.3.4
+- Use reuseable ci v2.3.3
+- Release on tag, not push
+- Use reuseable-ci v2.3.2
 - Use reuseable ci v2 (#19)
 - Skip package fingerprint validation (#16)
 - Extend commitlint length
@@ -130,21 +215,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Build the pull request as the project does too
+- Build as the project does, Xcode 27.1 on xcode-27
+- Pass Xcode 26.6 as the caller
+- Leave the Xcode version to the variable
+- Build with Xcode 26.6
+- Build without code signing in the trial
+- Restore workspace Package.resolved (#230)
+- Fix broken pin view padding (#183)
+- Use verifiers prefix+clientId as audience (#161)
+- Mock asynchronous sleep for testing (#132)
+- Correct main after branch error (#124)
+- Use consistent scheme for xcode cache (#100)
+- Fix swift format violations (#87)
+- Disable secure enclave temporarily (#45)
+- Design cleanup (#42)
+- Run setup configuration as preGenCommand (#41)
+- Changed to use localhost instead of static ip. (#34)
+- Issuer display image respects bounds (#30)
+- Use ephemeral key for response/request encryption (#25)
 - Use key from session in OpenID4VP flow (#17)
 - Fix lint scripts and apply formatting
 - Use URL from credential offer metadata
 - Fix scheme name for release build
 
-[0.0.12]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.11..v0.0.12
-[0.0.11]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.10..v0.0.11
-[0.0.10]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.9..v0.0.10
-[0.0.9]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.8..v0.0.9
-[0.0.8]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.7..v0.0.8
-[0.0.7]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.6..v0.0.7
-[0.0.6]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.5..v0.0.6
-[0.0.5]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.4..v0.0.5
-[0.0.4]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.3..v0.0.4
-[0.0.3]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.2..v0.0.3
-[0.0.2]: https://github.com/diggsweden/wallet-app-ios/compare/v0.0.1..v0.0.2
+### Removed
+
+- Remove unused input from release workflow (#215)
+- Remove universal padding (#203)
+- Remove custom renovate manager (#193)
+- Remove external link (#162)
+- Remove paranoid from local mise config (#157)
+- Remove device id from user and bump database with migration plan (#67)
+- Remove oidc login (#36)
+- Remove wua/v3 (#35)
+- Remove usage of v2/wua endpoint (#27)
+- Remove duplicate versions.xcconfig (#22)
+
+
 
 <!-- generated by git-cliff -->
