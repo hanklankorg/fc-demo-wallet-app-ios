@@ -3,23 +3,19 @@
 # SPDX-License-Identifier: CC0-1.0
 
 name: Pull Request Workflow
-
 on:
   pull_request:
-
 permissions:
   contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   pr-checks:
     # Forge CI owns the lint and security gate: the checks of nanolinter.toml
     # and the Swift linters, which fail the pull request on a finding. The
     # Xcode tests run in the unit-tests job below.
-    uses: diggsweden/forge-ci/.github/workflows/pullrequest-orchestrator.yml@PIN_FORGE_CI_SHA # v0.90.0
+    uses: hanklankorg/fc-forge-ci/.github/workflows/pullrequest-orchestrator.yml@d33ea2bd2260bad172b2af3a79d2a2f066dfc293 # v0.90.0
     permissions:
       actions: read # Download workflow result artifacts
       contents: read # Clone repository and read source code
@@ -29,14 +25,14 @@ jobs:
     with:
       # The full commit the uses: ref above names; every job of the route runs
       # the CLI built in this run from exactly this commit.
-      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      forge-ci-binary-ref: d33ea2bd2260bad172b2af3a79d2a2f066dfc293
       # Pinned by digest and admitted before any job runs; replace FIXME with
       # the digests of the release you call (docs/runtime-images.md).
-      runtime-image: ghcr.io/diggsweden/forge-ci-runtime-base@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
-      canonical-builder-image: ghcr.io/diggsweden/forge-ci-runtime-go-1.27@sha256:0000000000000000000000000000000000000000000000000000000000000000 # FIXME v0.90.0 digest
+      runtime-image: ghcr.io/hanklankorg/fc-forge-ci/forge-ci-runtime-base@sha256:9864c261c1b2f71d46eac2520f2e66de6b1ceb03c50f8d91acd19ddbccdd53e8 # FIXME v0.90.0 digest
+      canonical-builder-image: ghcr.io/hanklankorg/fc-forge-ci/forge-ci-runtime-go-1.27@sha256:d617197ad72db4c7a40e8d9727bcef523218b13b1f59c85b046aa5d9bb60d2e5 # FIXME v0.90.0 digest
       project-type: xcode-ios
       # The lint image, pinned by digest: the plan job refuses a tag.
-      nanolinter-image: ghcr.io/itiquette/nanolinter:swift@sha256:PIN_DIGEST
+      nanolinter-image: ghcr.io/hanklankorg/nanolinter-swift@sha256:9881b429b79263500c7c6afb7c09e46018f31833b2ec89bb336d8487ded85d12
       lint-engine: nanolinter
       linters.swiftformat: true
       linters.swiftlint: true
@@ -46,7 +42,7 @@ jobs:
       # Dependency advisories are reported and do not fail it: the scan
       # covers every dependency, not only the ones a pull request changes.
       enforce-lint: true
-
+      enforce-vulnerabilities: false
   unit-tests:
     runs-on: ${{ vars.MACOS_VERSION || 'xcode-27' }}
     steps:
@@ -56,7 +52,6 @@ jobs:
       - uses: ./.github/actions/setup-env
         with:
           xcode-version: ${{ vars.XCODE_VERSION || '27.1' }}
-
       - name: Check PR branch is up to date
         shell: bash
         env:
@@ -72,17 +67,14 @@ jobs:
             echo "::error:: This PR branch is stale. Rebase or merge $BASE_REF before running build and tests."
             exit 1
           fi
-
       - name: Run Xcode tests
         uses: ./.github/actions/xcode-test
-
       - name: Generate and upload coverage report
         if: always()
         uses: ./.github/actions/xcode-coverage-report
         with:
           xcresult-path: TestResults.xcresult
           artifact-name: coverage-report
-
       - name: Generate and upload package coverage report
         if: always()
         uses: ./.github/actions/xcode-coverage-report
@@ -91,21 +83,21 @@ jobs:
           artifact-name: package-coverage-report
           title: Package Code Coverage
 
-  # TODO: Enable when UI tests are implemented
-  # ui-tests:
-  #   runs-on: ${{ vars.MACOS_VERSION || 'macos-14' }}
-  #   needs: pr-checks
-  #   if: always()
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: ./.github/actions/setup-env
-  #       with:
-  #         xcode-version: ${{ vars.XCODE_VERSION || '16.1' }}
-  #
-  #     - name: Run UI tests
-  #       run: |
-  #         set -o pipefail
-  #         xcodebuild test \
-  #           -scheme WalletUITests \
-  #           -destination 'platform=iOS Simulator,name=iPhone 16' \
-  #         | xcbeautify
+# TODO: Enable when UI tests are implemented
+# ui-tests:
+#   runs-on: ${{ vars.MACOS_VERSION || 'macos-14' }}
+#   needs: pr-checks
+#   if: always()
+#   steps:
+#     - uses: actions/checkout@v4
+#     - uses: ./.github/actions/setup-env
+#       with:
+#         xcode-version: ${{ vars.XCODE_VERSION || '16.1' }}
+#
+#     - name: Run UI tests
+#       run: |
+#         set -o pipefail
+#         xcodebuild test \
+#           -scheme WalletUITests \
+#           -destination 'platform=iOS Simulator,name=iPhone 16' \
+#         | xcbeautify

@@ -37,7 +37,7 @@ jobs:
 
   build:
     needs: build-number
-    uses: diggsweden/forge-ci/.github/workflows/build-xcode-ios.yml@PIN_FORGE_CI_SHA # v0.90.0
+    uses: hanklankorg/fc-forge-ci/.github/workflows/build-xcode-ios.yml@d33ea2bd2260bad172b2af3a79d2a2f066dfc293 # v0.90.0
     permissions:
       contents: read
     secrets:
@@ -50,7 +50,7 @@ jobs:
     with:
       # The full commit the uses: ref above names; the macOS job builds the
       # CLI from exactly this commit.
-      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      forge-ci-binary-ref: d33ea2bd2260bad172b2af3a79d2a2f066dfc293
       xcode-version: ${{ vars.XCODE_VERSION }}
       # MACOS_VERSION holds the runner label, as before.
       runs-on-darwin-arm64: ${{ format('["{0}"]', vars.MACOS_VERSION || 'macos-26') }}
@@ -66,7 +66,7 @@ jobs:
 
   upload-testflight:
     needs: build
-    uses: diggsweden/forge-ci/.github/workflows/publish-apple-appstore.yml@PIN_FORGE_CI_SHA # v0.90.0
+    uses: hanklankorg/fc-forge-ci/.github/workflows/publish-apple-appstore.yml@d33ea2bd2260bad172b2af3a79d2a2f066dfc293 # v0.90.0
     permissions:
       actions: read # Download the IPA of the build job
       contents: read
@@ -75,7 +75,7 @@ jobs:
       APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
     with:
-      forge-ci-binary-ref: PIN_FORGE_CI_SHA # v0.90.0
+      forge-ci-binary-ref: d33ea2bd2260bad172b2af3a79d2a2f066dfc293
       branch: ${{ github.ref }}
       ipa-artifact-name: wallet-ios-demo-dev
       submit-for-review: false
